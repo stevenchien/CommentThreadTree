@@ -47,6 +47,8 @@
 - (void)setupTestTree
 {
     root = [[TreeObject alloc] init];
+    root.username = @"old tv shows";
+    root.comment = @"kid's shows";
     TreeObject *node1 = [[TreeObject alloc] init];
     node1.username = @"bob the builder";
     node1.comment = @"old kid's show";
@@ -108,6 +110,7 @@
     table.delegate = self;
     table.separatorStyle = UITableViewCellSeparatorStyleNone;
     table.backgroundColor = [UIColor whiteColor];
+    table.sectionHeaderHeight = 0.0f;
     table.sectionFooterHeight = 0.0f;
     commentsThreadTableView = table;
     
@@ -120,70 +123,81 @@
     CommentThreadTableViewCell *cell = [commentsThreadTableView dequeueReusableCellWithIdentifier:@"COMMENTTHREADCELL"];
     if (cell == nil) {
         cell = [[CommentThreadTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"COMMENTTHREADCELL" levelOfDepth:0 isHidden:NO];
+        [cell.invisTapButton addTarget:self action:@selector(didTapUsername:) forControlEvents:UIControlEventTouchUpInside];
     }
-    TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.section + 1];
+    TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.row];
     cell.level = [node depthOfNode];
+    if (node.isHidden) {
+        cell.username.textColor = [UIColor grayColor];
+    }
+    else {
+        cell.username.textColor = [UIColor blueColor];
+    }
+    cell.username.text = node.username;
     cell.comment.text = node.comment;
     return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([hiddenSections containsObject:@(section)]) {
-        return 0;
-    }
-    else {
-        return 1;
-    }
+    return [root descendants] + 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.section + 1];
-    CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
-                                constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
-                                    lineBreakMode:NSLineBreakByWordWrapping];
-    CGFloat labelHeight = labelSize.height;
-    return labelHeight;
+    TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.row];
+    if (node.isHidden) {
+        return 20;
+    }
+    else {
+        CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
+                                    constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
+                                        lineBreakMode:NSLineBreakByWordWrapping];
+        CGFloat labelHeight = labelSize.height;
+        return labelHeight + 20;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [root descendants];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 20;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    CommentThreadSectionHeaderView *view = [[CommentThreadSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20)];
-    TreeObject *node = [[root allElementsInOrder] objectAtIndex:section + 1];
-    view.tag = section;
-    view.level = [node depthOfNode];
-    view.username.text = node.username;
-    [view.invisTapButton addTarget:self action:@selector(didPushSectionHeader:) forControlEvents:UIControlEventTouchUpInside];
-    return view;
+    return 1;
 }
 
 #pragma mark - UITableViewDelegate
 
-#pragma mark - Section Header Tap Action
-- (void)didPushSectionHeader:(UIButton *)sender {
-    [commentsThreadTableView beginUpdates];
-    int section = sender.superview.tag;
-    TreeObject *node = [[root allElementsInOrder] objectAtIndex:section];
-    if (![hiddenSections containsObject:@(section)]) {
-        [commentsThreadTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:section]] withRowAnimation:UITableViewRowAnimationFade];
-        [hiddenSections addObject:@(section)];
+- (void)didTapUsername:(UIButton *)sender
+{
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:commentsThreadTableView];
+    NSIndexPath *indexPath = [commentsThreadTableView indexPathForRowAtPoint:buttonPosition];
+    CommentThreadTableViewCell *cell = sender.superview.superview;
+    TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.row];
+    if (!node.isHidden) {
+        [commentsThreadTableView beginUpdates];
+        NSArray *array = [self calculateArrayOfIndexPaths:node];
+        [commentsThreadTableView deleteRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationFade];
+        node.isHidden = YES;
+        [commentsThreadTableView endUpdates];
     }
     else {
-        [commentsThreadTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:section]] withRowAnimation:UITableViewRowAnimationFade];
-        [hiddenSections removeObject:@(section)];
+        [commentsThreadTableView beginUpdates];
+        node.isHidden = NO;
+        NSArray *array = [self calculateArrayOfIndexPaths:node];
+        [commentsThreadTableView insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationFade];
+        [commentsThreadTableView endUpdates];
     }
-    [commentsThreadTableView endUpdates];
+}
+
+- (NSArray *)calculateArrayOfIndexPaths:(TreeObject *)node
+{
+    @autoreleasepool {
+        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:1];
+        for (TreeObject *child in node.children) {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[[root allElementsInOrder] indexOfObject:child] inSection:0];
+            [array addObject:indexPath];
+            [array addObjectsFromArray:[self calculateArrayOfIndexPaths:child]];
+        }
+        return array;
+    }
 }
 
 @end

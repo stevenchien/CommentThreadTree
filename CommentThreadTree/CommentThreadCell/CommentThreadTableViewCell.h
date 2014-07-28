@@ -11,8 +11,10 @@
 @interface CommentThreadTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UILabel *comment;
+@property (nonatomic, strong) UILabel *username;
 @property (nonatomic, assign) NSUInteger level;
 @property (nonatomic, assign) BOOL isHidden;
+@property (nonatomic, strong) UIButton *invisTapButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier levelOfDepth:(NSUInteger)nodeLevel isHidden:(BOOL)expanded;
 

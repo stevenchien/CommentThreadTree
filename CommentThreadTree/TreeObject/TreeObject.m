@@ -20,7 +20,7 @@
 {
     self = [super init];
     if (self) {
-        children = [[NSMutableArray alloc] initWithCapacity:1];
+        self.children = [[NSMutableArray alloc] initWithCapacity:1];
     }
     return self;
 }
@@ -34,11 +34,13 @@
 - (NSUInteger)descendants
 {
     NSUInteger count = 0;
-    for (TreeObject *node in self.children) {
-        if(!node.isHidden) {
+    if (!self.isHidden) {
+        for (TreeObject *node in self.children) {
             count ++;
-            if ([node.children count] > 0) {
-                count += [node descendants];
+            if(!node.isHidden) {
+                if ([node.children count] > 0) {
+                    count += [node descendants];
+                }
             }
         }
     }
@@ -58,14 +60,16 @@
 
 - (NSArray *)allElementsInOrder
 {
-    NSMutableArray *elements = [[NSMutableArray alloc] initWithCapacity:[self descendants]];
-    [elements addObject:self];
-    if (!self.isHidden) {
-        for (TreeObject *node in self.children) {
-            [elements addObjectsFromArray:[node allElementsInOrder]];
+    @autoreleasepool {
+        NSMutableArray *elements = [[NSMutableArray alloc] initWithCapacity:[self descendants]];
+        [elements addObject:self];
+        if (!self.isHidden) {
+            for (TreeObject *node in self.children) {
+                [elements addObjectsFromArray:[node allElementsInOrder]];
+            }
         }
+        return elements;
     }
-    return elements;
 }
 
 @end
