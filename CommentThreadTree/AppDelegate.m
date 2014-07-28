@@ -7,12 +7,19 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    UINib *nib = [UINib nibWithNibName:@"CommentThreadTree" bundle:nil];
+    UINavigationController *nav = [[nib instantiateWithOwner:nil options:nil] objectAtIndex:0];
+    ViewController *viewController = [[ViewController alloc] init];
+    [nav setViewControllers:[NSArray arrayWithObjects:viewController, nil]];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 							
