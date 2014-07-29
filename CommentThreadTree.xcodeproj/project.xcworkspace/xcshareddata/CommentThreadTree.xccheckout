@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B6944529-5D0A-46DB-A8EB-1B2EDAC0013A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CommentThreadTree</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C52C30AD-D07A-4CAA-AD1A-AC128FCA5BEB</key>
+		<string>https://github.com/stevenchien/CommentThreadTree.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CommentThreadTree.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C52C30AD-D07A-4CAA-AD1A-AC128FCA5BEB</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/stevenchien/CommentThreadTree.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C52C30AD-D07A-4CAA-AD1A-AC128FCA5BEB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C52C30AD-D07A-4CAA-AD1A-AC128FCA5BEB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CommentThreadTree</string>
+		</dict>
+	</array>
+</dict>
+</plist>

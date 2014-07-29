@@ -150,11 +150,12 @@
         return 20;
     }
     else {
-        CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
-                                    constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
-                                        lineBreakMode:NSLineBreakByWordWrapping];
-        CGFloat labelHeight = labelSize.height;
-        return labelHeight + 20;
+//        CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
+//                                    constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
+//                                        lineBreakMode:NSLineBreakByWordWrapping];
+//        CGFloat labelHeight = labelSize.height;
+//        return labelHeight + 20;
+        return 40;
     }
 }
 
@@ -177,6 +178,7 @@
         [commentsThreadTableView deleteRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationFade];
         node.isHidden = YES;
         [commentsThreadTableView endUpdates];
+        cell.username.textColor = [UIColor grayColor];
     }
     else {
         [commentsThreadTableView beginUpdates];
@@ -184,6 +186,7 @@
         NSArray *array = [self calculateArrayOfIndexPaths:node];
         [commentsThreadTableView insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationFade];
         [commentsThreadTableView endUpdates];
+        cell.username.textColor = [UIColor blueColor];
     }
 }
 
