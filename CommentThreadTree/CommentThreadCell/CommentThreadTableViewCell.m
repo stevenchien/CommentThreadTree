@@ -52,6 +52,7 @@
     self.comment.backgroundColor = [UIColor clearColor];
     self.comment.textAlignment = NSTextAlignmentLeft;
     self.comment.textColor = [UIColor blackColor];
+    self.comment.lineBreakMode = UILineBreakModeWordWrap;
     self.comment.font = [UIFont systemFontOfSize:16.0f];
     self.comment.numberOfLines = 0;
     

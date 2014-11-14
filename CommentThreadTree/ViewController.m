@@ -150,12 +150,14 @@
         return 20;
     }
     else {
-//        CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
-//                                    constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
-//                                        lineBreakMode:NSLineBreakByWordWrapping];
-//        CGFloat labelHeight = labelSize.height;
-//        return labelHeight + 20;
-        return 40;
+        CGSize labelSize = [node.comment sizeWithFont:[UIFont systemFontOfSize:16.f]
+                                    constrainedToSize:CGSizeMake(self.view.bounds.size.width - ([node depthOfNode] * 20), 1000)
+                                        lineBreakMode:NSLineBreakByWordWrapping];
+        CGFloat labelHeight = labelSize.height;
+        if (labelHeight < 20) {
+            labelHeight = 20;
+        }
+        return labelHeight + 20;
     }
 }
 
@@ -170,7 +172,24 @@
 {
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:commentsThreadTableView];
     NSIndexPath *indexPath = [commentsThreadTableView indexPathForRowAtPoint:buttonPosition];
-    CommentThreadTableViewCell *cell = sender.superview.superview;
+    CommentThreadTableViewCell *temp = sender.superview;
+    while ([temp class] != [CommentThreadTableViewCell class]) {
+        temp = [temp superview];
+    }
+    CommentThreadTableViewCell *cell = temp;
+    if ([cell class] == [CommentThreadTableViewCell class]) {
+        
+    }
+    else {
+        CommentThreadTableViewCell *temp = sender.superview;
+        while ([temp class] != [CommentThreadTableViewCell class]) {
+            temp = [temp superview];
+        }
+        CommentThreadTableViewCell *cell = temp;
+        if ([cell class] == [CommentThreadTableViewCell class]) {
+            
+        }
+    }
     TreeObject *node = [[root allElementsInOrder] objectAtIndex:indexPath.row];
     if (!node.isHidden) {
         [commentsThreadTableView beginUpdates];
